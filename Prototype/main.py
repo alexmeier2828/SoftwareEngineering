@@ -2,6 +2,8 @@
 
 import pygame
 from menu import Menu
+from style import Colors
+
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 
@@ -32,6 +34,14 @@ class EquationRect:
         pygame.draw.rect(screen, self.color, self.rect)
         screen.blit(font.render(self.equation, True, BLACK), (self.rect.x, self.rect.y ) )
 
+
+def drawScoreAndTime():
+    score_rect = pygame.Rect(0, 0, 90, 90)
+    font = pygame.font.SysFont('Arial', 15)
+    pygame.draw.rect(screen, Colors.GREY, score_rect, 1)
+    screen.blit(font.render("00:00", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 10))
+    screen.blit(font.render("Score: 0000", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
+
 rects = []
 
 
@@ -49,9 +59,11 @@ selected = None
 clock = pygame.time.Clock()
 is_running = True
 show_menu = True
+game_finished = False;
 
 while is_running:
 
+    #event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             is_running = False
@@ -68,11 +80,11 @@ while is_running:
                     show_menu = False
                 if show_menu and Menu.hard.rect.collidepoint(event.pos):
                     show_menu = False
-                
+
                 for i, r in enumerate(rects):
                     grabbable = r.grabbable
                     r = r.rect
-                    if r.collidepoint(event.pos) and grabbable:
+                    if r.collidepoint(event.pos) and grabbable and not show_menu:
                         selected = i
                         selected_offset_x = r.x - event.pos[0]
                         selected_offset_y = r.y - event.pos[1]
@@ -94,14 +106,25 @@ while is_running:
                 # move object
                 rects[selected].rect.x = event.pos[0] + selected_offset_x
                 rects[selected].rect.y = event.pos[1] + selected_offset_y
+
+    #keep track of game state here
+    if len(rects) == 0:
+        game_finished = True
+
+    #draw graphics
     screen.fill(BLACK)
     hand = pygame.Rect(0, 400, 800, 200)
     pygame.draw.rect(screen, (100, 100, 100), hand)
 
-    for r in rects:
-        r.draw()
-    if show_menu:
-        Menu.draw(screen)
+    drawScoreAndTime()
+    if game_finished:
+        font = pygame.font.SysFont('Arial', 40)
+        screen.blit(font.render("You Win!", True, Colors.WHITE), (300, 150))
+    else:
+        for r in rects:
+            r.draw()
+        if show_menu:
+            Menu.draw(screen)
     pygame.display.update()
 
     clock.tick(25)
