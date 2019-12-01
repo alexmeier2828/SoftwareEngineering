@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import pygame
+from rectangle import EquationRect, new_easy_rectangle_pair
 from menu import Menu
 from style import Colors
+from util import shuffle
 
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
-
 RED   = (255,   0,   0)
 GREEN = (  0, 255,   0)
 BLUE  = (  0,   0, 255)
@@ -21,18 +22,6 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 screen_rect = screen.get_rect()
 
-class EquationRect:
-    def __init__(self, pygame_rect, color, equation, value, grabbable):
-        self.rect = pygame_rect
-        self.equation = equation
-        self.color = color
-        self.value = value
-        self.grabbable = grabbable
-
-    def draw(self):
-        font = pygame.font.SysFont('Arial', 32)
-        pygame.draw.rect(screen, self.color, self.rect)
-        screen.blit(font.render(self.equation, True, BLACK), (self.rect.x, self.rect.y ) )
 
 
 def drawScoreAndTime():
@@ -42,23 +31,25 @@ def drawScoreAndTime():
     screen.blit(font.render("00:00", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 10))
     screen.blit(font.render("Score: 0000", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
 
+buckets = [pygame.Rect(100, 100, 150, 100), pygame.Rect(300, 100, 150, 100), pygame.Rect(500, 100, 150, 100)]
+answers = [pygame.Rect(100, 450, 150, 100), pygame.Rect(300, 450, 150, 100), pygame.Rect(500, 450, 150, 100)]
+shuffle(buckets)
+shuffle(answers)
+
+print(buckets)
+
 rects = []
 
-
-rects.append( EquationRect(pygame.Rect(100, 100, 150, 100), RED, "1 + 3", 4, False) )
-rects.append( EquationRect(pygame.Rect(300, 100, 150, 100), RED, "4 + 4", 8, False) )
-rects.append( EquationRect(pygame.Rect(500, 100, 150, 100), RED, "10 / 2", 5, False) )
-
-rects.append( EquationRect(pygame.Rect(500, 450, 150, 100), BLUE, "7 - 3", 4, True) )
-rects.append( EquationRect(pygame.Rect(100, 450, 150, 100), BLUE, "6 + 2", 8, True) )
-rects.append( EquationRect(pygame.Rect(300, 450, 150, 100), BLUE, "1 * 5", 5, True) )
-
+for i in range(0, len(buckets)):
+    new_pair = new_easy_rectangle_pair(buckets[i], answers[i])
+    rects.append(new_pair[0])
+    rects.append(new_pair[1])
 
 selected = None
 
 clock = pygame.time.Clock()
 is_running = True
-show_menu = True
+show_menu = False
 game_finished = False;
 
 while is_running:
@@ -93,12 +84,10 @@ while is_running:
             if event.button == 1:
                 if selected is not None:
                     for r in rects:
-                        print(r.rect.colliderect(rects[selected].rect))
                         if r.rect.colliderect(rects[selected].rect) and r is not rects[selected] and rects[selected].value == r.value:
                             del rects[selected]
                             rects.remove(r)
                             break
-                    print("-----------------")
                     selected = None
 
         elif event.type == pygame.MOUSEMOTION:
@@ -122,7 +111,7 @@ while is_running:
         screen.blit(font.render("You Win!", True, Colors.WHITE), (300, 150))
     else:
         for r in rects:
-            r.draw()
+            r.draw_on(screen)
         if show_menu:
             Menu.draw(screen)
     pygame.display.update()
