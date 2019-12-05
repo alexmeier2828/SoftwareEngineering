@@ -43,6 +43,7 @@ class EquationRect:
 
 def new_easy_rectangle_pair(r1, r2):
     val = randint(0, 10)
-    bucket = EquationRect(r1, RED, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, False)
+    color = randint(0, 2)
+    bucket = EquationRect(r1, colors[color], easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, False)
     rect = EquationRect(r2, BLUE, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, True)
     return (bucket, rect)
