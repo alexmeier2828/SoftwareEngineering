@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import pygame
+import time
 from rectangle import EquationRect, new_easy_rectangle_pair
 from menu import Menu
 from style import Colors
 from util import shuffle
+from scoreKeeper import ScoreKeeper
 
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
@@ -22,14 +24,23 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 screen_rect = screen.get_rect()
 
-
+scoreKeeper = ScoreKeeper() #this should probably be in  the game class when that exists
+startTime = time.time() #start timer
+elapsedTime = time.time() - startTime
 
 def drawScoreAndTime():
+    global elapsedTime #this is not ideal but it works until we have a class to put everything in.
     score_rect = pygame.Rect(0, 0, 90, 90)
     font = pygame.font.SysFont('Arial', 15)
     pygame.draw.rect(screen, Colors.GREY, score_rect, 1)
-    screen.blit(font.render("00:00", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 10))
-    screen.blit(font.render("Score: 0000", True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
+
+    if(game_finished == False):
+        elapsedTime = time.time() - startTime
+
+    timeString = time.strftime("%M:%S", time.gmtime(elapsedTime));
+
+    screen.blit(font.render("Time: " + timeString, True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 10))
+    screen.blit(font.render("Score: " +str(scoreKeeper.score), True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
 
 buckets = [pygame.Rect(100, 100, 150, 100), pygame.Rect(300, 100, 150, 100), pygame.Rect(500, 100, 150, 100)]
 answers = [pygame.Rect(100, 450, 150, 100), pygame.Rect(300, 450, 150, 100), pygame.Rect(500, 450, 150, 100)]
@@ -87,7 +98,10 @@ while is_running:
                         if r.rect.colliderect(rects[selected].rect) and r is not rects[selected] and rects[selected].value == r.value:
                             del rects[selected]
                             rects.remove(r)
+                            scoreKeeper.increment(10) #increment score by 10
                             break
+                        else:
+                            scoreKeeper.endCombo()
                     selected = None
 
         elif event.type == pygame.MOUSEMOTION:
