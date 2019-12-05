@@ -46,4 +46,3 @@ def new_easy_rectangle_pair(r1, r2):
     bucket = EquationRect(r1, RED, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, False)
     rect = EquationRect(r2, BLUE, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, True)
     return (bucket, rect)
-
