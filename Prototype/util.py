@@ -7,7 +7,6 @@ def swap(l, a, b):
 
 def shuffle(l):
     last = len(l) - 1
-    print(last)
     for i in range(0, len(l)):
         swap(l, i, randint(0, last))
 

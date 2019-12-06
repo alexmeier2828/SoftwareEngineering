@@ -24,6 +24,8 @@ BLOCK_SIZE = 100
 
 pygame.init()
 
+
+
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 screen_rect = screen.get_rect()
 
@@ -48,7 +50,7 @@ def drawScoreAndTime():
     screen.blit(font.render("Score: " +str(scoreKeeper.score), True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
 
 def run():
-    selected = None
+    
 
     playfield = PlayField()
     hand = Hand()
@@ -89,32 +91,30 @@ def run():
                         grabbable = r.grabbable
                         r = r.rect
                         if r.collidepoint(event.pos) and grabbable and not show_menu:
-                            selected = i
+                            hand.selected = i
                             selected_offset_x = r.x - event.pos[0]
                             selected_offset_y = r.y - event.pos[1]
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
-                    if selected is not None:
+                    if hand.selected is not None:
                         buckets = playfield.buckets()
-                        print("buckets:", buckets)
                         for i in range(0, len(buckets)):
-                            print("checking ", i)
-                            if buckets[i].rect.colliderect(hand.pieces[selected].rect) and buckets[i].value == hand.pieces[selected].value:
-                                print("MATCH!!!! i = ", i)
+                            if buckets[i].rect.colliderect(hand.selected_piece().rect) and buckets[i].value == hand.selected_piece().value:
                                 playfield.remove(i)
-                                hand.remove(selected)
+                                hand.remove(hand.selected)
                                 scoreKeeper.increment(10) #increment score by 10
+                                break
                             else:
                                 scoreKeeper.endCombo()
-                        selected = None
+                        hand.selected = None
                         hand.realign()
 
             elif event.type == pygame.MOUSEMOTION:
-                if selected is not None: # selected can be `0` so `is not None` is required
+                if hand.selected is not None: # selected can be `0` so `is not None` is required
                     # move object
-                    hand.pieces[selected].rect.x = event.pos[0] + selected_offset_x
-                    hand.pieces[selected].rect.y = event.pos[1] + selected_offset_y
+                    hand.selected_piece().rect.x = event.pos[0] + selected_offset_x
+                    hand.selected_piece().rect.y = event.pos[1] + selected_offset_y
 
         #keep track of game state here
         # if len(rects) == 0:

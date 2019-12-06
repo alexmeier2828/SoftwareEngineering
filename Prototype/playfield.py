@@ -12,7 +12,7 @@ COL_3_X = 550
 class PlayField:
     def __init__(self):
         self.progress = 0
-        self.speed = .25
+        self.speed = .5
         self.c1 = []
         self.c2 = []
         self.c3 = []
@@ -35,13 +35,13 @@ class PlayField:
             removed = self.c2.pop(n)
             delta_y = removed.rect.height
             for i in range(n, len(self.c2)):
-                self.c2[i].y -= delta_y
+                self.c2[i].rect.y -= delta_y
             return 0
         
         removed = self.c3.pop(n)
         delta_y = removed.rect.height
         for i in range(n, len(self.c3)):
-            self.c3[i].y -= delta_y
+            self.c3[i].rect.y -= delta_y
         return 0
         
     def buckets(self):
@@ -49,14 +49,16 @@ class PlayField:
 
     def advance(self, hand):
         self.progress += self.speed
-        if self.progress > 1:
-            self.progress = 0
+        while self.progress > 1:
+            self.progress -= 1
             for b in self.c1:
                 b.rect.y += 1
             for b in self.c2:
                 b.rect.y += 1
             for b in self.c3:
                 b.rect.y += 1
+
+        hand.shuffle += .01
 
         if len(self.c1) < 1:
             h = 100

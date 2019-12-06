@@ -38,7 +38,7 @@ class EquationRect:
     def draw_on(self, screen):
         font = pygame.font.SysFont('Arial', 32)
         pygame.draw.rect(screen, self.color, self.rect)
-        screen.blit(font.render(self.equation, True, BLACK), (self.rect.x, self.rect.y ) )
+        screen.blit(font.render(self.equation, True, BLACK), (self.rect.x + 10, self.rect.y + self.rect.height * 0.5) )
 
 
 def new_easy_rectangle_pair(r1, r2):
