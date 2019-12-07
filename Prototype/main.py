@@ -22,11 +22,14 @@ SCREEN_HEIGHT = 600
 
 BLOCK_SIZE = 100
 
+WINDOW_TITLE = "MathMatch"
+
 pygame.init()
 
 
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption(WINDOW_TITLE) #sets window title.
 screen_rect = screen.get_rect()
 
 scoreKeeper = ScoreKeeper() #this should probably be in  the game class when that exists
@@ -50,11 +53,11 @@ def drawScoreAndTime():
     screen.blit(font.render("Score: " +str(scoreKeeper.score), True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
 
 def run():
-    
+
 
     playfield = PlayField()
     hand = Hand()
-    
+
 
     clock = pygame.time.Clock()
     is_running = True
