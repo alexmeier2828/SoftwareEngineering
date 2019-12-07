@@ -102,14 +102,18 @@ def run():
                 if event.button == 1:
                     if hand.selected is not None:
                         buckets = playfield.buckets()
+                        foundMatch = False
                         for i in range(0, len(buckets)):
                             if buckets[i].rect.colliderect(hand.selected_piece().rect) and buckets[i].value == hand.selected_piece().value:
                                 playfield.remove(i)
                                 hand.remove(hand.selected)
-                                scoreKeeper.increment(10) #increment score by 10
+                                scoreKeeper.increment(buckets[i].value) #increment score by 10
+                                foundMatch = True
                                 break
-                            else:
-                                scoreKeeper.endCombo()
+
+                        #reset combo if no matching piece was selected
+                        if foundMatch == False:
+                            scoreKeeper.endCombo()
                         hand.selected = None
                         hand.realign()
 
