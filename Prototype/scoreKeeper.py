@@ -8,6 +8,7 @@ class ScoreKeeper:
     def increment(self, size):
         self.score += size * (self.combo + 1)
         self.combo += 1
+        print(str(self.combo))
 
     #resets the combo counter
     def endCombo(self):

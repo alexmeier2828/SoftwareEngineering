@@ -6,6 +6,7 @@ from playfield import PlayField
 from hand import Hand
 from rectangle import EquationRect, new_easy_rectangle_pair
 from menu import Menu
+from gameOverScreen import GameOverScreen
 from style import Colors
 from util import shuffle
 from random import randint
@@ -22,11 +23,16 @@ SCREEN_HEIGHT = 600
 
 BLOCK_SIZE = 100
 
+WINDOW_TITLE = "MathMatch"
+
+HAND_AREA = pygame.Rect(0, 400, 800, 200)
+
 pygame.init()
 
 
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption(WINDOW_TITLE) #sets window title.
 screen_rect = screen.get_rect()
 
 scoreKeeper = ScoreKeeper() #this should probably be in  the game class when that exists
@@ -50,16 +56,17 @@ def drawScoreAndTime():
     screen.blit(font.render("Score: " +str(scoreKeeper.score), True, Colors.WHITE), (score_rect.x + 5, score_rect.y + 50))
 
 def run():
-    
+    global game_finished
+    global startTime
+    global scoreKeeper
 
     playfield = PlayField()
     hand = Hand()
-    
+
 
     clock = pygame.time.Clock()
     is_running = True
     show_menu = False
-
 
     while is_running:
         playfield.advance(hand)
@@ -87,6 +94,17 @@ def run():
                     if show_menu and Menu.hard.rect.collidepoint(event.pos):
                         show_menu = False
 
+                    #catch event for GameOverScreen
+                    if game_finished and GameOverScreen.restart.rect.collidepoint(event.pos):
+                        game_finished = False
+                        show_menu = False           #set this to true when select dificulty is a thing
+                        scoreKeeper = ScoreKeeper()
+                        playfield = PlayField()
+                        hand = Hand()
+                        startTime = time.time();
+                        elapsedTime = 0
+
+
                     for i, r in enumerate(hand.pieces):
                         grabbable = r.grabbable
                         r = r.rect
@@ -99,14 +117,18 @@ def run():
                 if event.button == 1:
                     if hand.selected is not None:
                         buckets = playfield.buckets()
+                        foundMatch = False
                         for i in range(0, len(buckets)):
                             if buckets[i].rect.colliderect(hand.selected_piece().rect) and buckets[i].value == hand.selected_piece().value:
                                 playfield.remove(i)
                                 hand.remove(hand.selected)
-                                scoreKeeper.increment(10) #increment score by 10
+                                scoreKeeper.increment(buckets[i].value) #increment score by 10
+                                foundMatch = True
                                 break
-                            else:
-                                scoreKeeper.endCombo()
+
+                        #reset combo if no matching piece was selected
+                        if foundMatch == False:
+                            scoreKeeper.endCombo()
                         hand.selected = None
                         hand.realign()
 
@@ -117,18 +139,19 @@ def run():
                     hand.selected_piece().rect.y = event.pos[1] + selected_offset_y
 
         #keep track of game state here
-        # if len(rects) == 0:
-        #    game_finished = True
+        buckets = playfield.buckets()
+        for bucket in buckets:
+            if bucket.rect.colliderect(HAND_AREA):
+                game_finished = True                #game over condition
+
 
         #draw graphics
         screen.fill(BLACK)
-        hand_area = pygame.Rect(0, 400, 800, 200)
-        pygame.draw.rect(screen, (100, 100, 100), hand_area)
+        pygame.draw.rect(screen, (100, 100, 100), HAND_AREA)
 
         drawScoreAndTime()
         if game_finished:
-            font = pygame.font.SysFont('Arial', 40)
-            screen.blit(font.render("You Win!", True, Colors.WHITE), (300, 150))
+            GameOverScreen.draw(screen)
         else:
             for r in playfield.buckets():
                 r.draw_on(screen)
