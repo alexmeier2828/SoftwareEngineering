@@ -13,4 +13,3 @@ class ScoreKeeper:
     #resets the combo counter
     def endCombo(self):
         self.combo = 0
-        print("reset")
