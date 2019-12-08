@@ -101,7 +101,7 @@ def run():
                     #catch event for GameOverScreen
                     if game_finished and GameOverScreen.restart.rect.collidepoint(event.pos):
                         game_finished = False
-                        show_menu = False           #set this to true when select dificulty is a thing
+                        show_menu = True          #set this to true when select dificulty is a thing
                         scoreKeeper = ScoreKeeper()
                         playfield = PlayField()
                         hand = Hand()

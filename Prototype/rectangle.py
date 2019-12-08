@@ -12,7 +12,7 @@ easy_equations = {}
 easy_equations[0] = ["0", "3 - 3", "1 - 1"]
 easy_equations[1] = ["1", "0 + 1", "3 - 2", "5 - 4"]
 easy_equations[2] = ["2", "1 + 1", "2 + 0", "3 - 1", "5 - 3"]
-easy_equations[3] = ["3", "2 + 1", "1 + 2", "1 + 1", "5 - 2", "7 - 4"]
+easy_equations[3] = ["3", "2 + 1", "1 + 2", "5 - 2", "7 - 4"]
 easy_equations[4] = ["4", "2 + 2", "3 + 1", "5 - 1", "7 - 3"]
 easy_equations[5] = ["5", "2 + 3", "4 + 1", "6 - 1", "8 - 3"]
 easy_equations[6] = ["6", "3 + 3", "4 + 2", "5 + 1", "8 - 2", "10 - 4"]
@@ -59,7 +59,7 @@ class EquationRect:
 def new_rectangle_pair(hard, r1, r2):
     if hard:
         return new_hard_rectangle_pair(r1, r2)
-    else: 
+    else:
         return new_easy_rectangle_pair(r1, r2)
 
 def new_easy_rectangle_pair(r1, r2):
@@ -75,4 +75,3 @@ def new_hard_rectangle_pair(r1, r2):
     bucket = EquationRect(r1, colors[color], hard_equations[val][randint(0, len(hard_equations[val]) - 1)], val, False)
     rect = EquationRect(r2, Colors.BLUE, hard_equations[val][randint(0, len(hard_equations[val]) - 1)], val, True)
     return (bucket, rect)
-
