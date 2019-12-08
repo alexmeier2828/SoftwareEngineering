@@ -1,5 +1,6 @@
 import pygame
 import copy
+from random import randint
 from util import shuffle
 
 one = [pygame.Rect(300, 450, 150, 100)]
@@ -19,11 +20,13 @@ class Hand:
         self.overflow = False
     
     def add(self, rect):
-        global selected
-        if len(self.pieces) < 7:
+        if len(self.pieces) < 7 and self.selected is None:
+            self.pieces.insert(randint(0, len(self.pieces)), rect)
+        elif len(self.pieces) < 7 and self.selected is not None: 
             self.pieces.append(rect)
         else: 
             self.extras.append(rect)
+            
         if self.selected is None and self.shuffle >= 1:
             shuffle(self.pieces)
             self.shuffle -= 1

@@ -29,8 +29,6 @@ HAND_AREA = pygame.Rect(0, 400, 800, 200)
 
 pygame.init()
 
-
-
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(WINDOW_TITLE) #sets window title.
 screen_rect = screen.get_rect()
@@ -59,6 +57,7 @@ def run():
     global game_finished
     global startTime
     global scoreKeeper
+    hard = False
 
     playfield = PlayField()
     hand = Hand()
@@ -66,10 +65,13 @@ def run():
 
     clock = pygame.time.Clock()
     is_running = True
-    show_menu = False
+    show_menu = True
 
     while is_running:
-        playfield.advance(hand)
+        if not show_menu:
+            playfield.advance(hand, hard)
+            clock.tick(25)
+
         #event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -90,8 +92,10 @@ def run():
 
                     #catch event for dificulty selection
                     if show_menu and Menu.easy.rect.collidepoint(event.pos):
+                        hard = False
                         show_menu = False
                     if show_menu and Menu.hard.rect.collidepoint(event.pos):
+                        hard = True
                         show_menu = False
 
                     #catch event for GameOverScreen
@@ -161,7 +165,6 @@ def run():
                 Menu.draw(screen)
         pygame.display.update()
 
-        clock.tick(25)
 
     pygame.quit()
 

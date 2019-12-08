@@ -1,5 +1,5 @@
 import pygame
-from rectangle import new_easy_rectangle_pair
+from rectangle import new_rectangle_pair
 from random import randint
 
 HAND_REC = pygame.Rect(100, 100, 100, 100)
@@ -12,7 +12,7 @@ COL_3_X = 550
 class PlayField:
     def __init__(self):
         self.progress = 0
-        self.speed = .5
+        self.speed = .3
         self.c1 = []
         self.c2 = []
         self.c3 = []
@@ -47,7 +47,7 @@ class PlayField:
     def buckets(self):
         return self.c1 + self.c2 + self.c3
 
-    def advance(self, hand):
+    def advance(self, hand, hard):
         self.progress += self.speed
         while self.progress > 1:
             self.progress -= 1
@@ -58,36 +58,36 @@ class PlayField:
             for b in self.c3:
                 b.rect.y += 1
 
-        hand.shuffle += .01
+        hand.shuffle += .0001
 
         if len(self.c1) < 1:
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_1_X, -h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_1_X, -h, COL_WIDTH, h), HAND_REC)
             self.c1.append(b)
             hand.add(p)
         if self.c1[0].rect.y > 0.0: 
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_1_X, self.c1[0].rect.y - h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_1_X, self.c1[0].rect.y - h, COL_WIDTH, h), HAND_REC)
             self.c1.insert(0, b)
             hand.add(p)
         if len(self.c2) < 1:
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_2_X, -h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_2_X, -h, COL_WIDTH, h), HAND_REC)
             self.c2.append(b)
             hand.add(p)
         if self.c2[0].rect.y > 0.0: 
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_2_X, self.c2[0].rect.y - h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_2_X, self.c2[0].rect.y - h, COL_WIDTH, h), HAND_REC)
             self.c2.insert(0, b)
             hand.add(p)
         if len(self.c3) < 1:
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_3_X, -h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_3_X, -h, COL_WIDTH, h), HAND_REC)
             self.c3.append(b)
             hand.add(p)
         if self.c3[0].rect.y > 0.0: 
-            h = 100
-            b, p = new_easy_rectangle_pair(pygame.Rect(COL_3_X, self.c3[0].rect.y - h, COL_WIDTH, h), HAND_REC)
+            h = randint(75, 125)
+            b, p = new_rectangle_pair(hard, pygame.Rect(COL_3_X, self.c3[0].rect.y - h, COL_WIDTH, h), HAND_REC)
             self.c3.insert(0, b)
             hand.add(p)
         
