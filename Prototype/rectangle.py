@@ -2,18 +2,9 @@ import pygame
 from random import seed
 from random import randint
 from datetime import datetime
+from style import Colors
 
-BLACK = (40, 44, 52)
-WHITE = (171, 178, 191)
-
-PURPLE = (198, 120, 221)
-GREEN  = (152, 195, 121)
-ORANGE = (209, 154, 102)
-BLUE   = ( 97, 175, 233)
-RED    = (224, 108, 117)
-GOLD   = (229, 192, 123)
-
-colors = [RED, GREEN, ORANGE, GOLD, PURPLE]
+colors = [Colors.RED, Colors.GREEN, Colors.ORANGE, Colors.GOLD, Colors.PURPLE, Colors.AQUA]
 
 seed(datetime.now())
 
@@ -63,7 +54,7 @@ class EquationRect:
         else:
             font = pygame.font.SysFont('Ubuntu Mono', 24)
         pygame.draw.rect(screen, self.color, self.rect)
-        screen.blit(font.render(self.equation, True, BLACK), (self.rect.x + 10, self.rect.y + self.rect.height * 0.5) )
+        screen.blit(font.render(self.equation, True, Colors.BLACK), (self.rect.x + 10, self.rect.y + self.rect.height * 0.5) )
 
 def new_rectangle_pair(hard, r1, r2):
     if hard:
@@ -73,15 +64,15 @@ def new_rectangle_pair(hard, r1, r2):
 
 def new_easy_rectangle_pair(r1, r2):
     val = randint(0, 13)
-    color = randint(0, 4)
+    color = randint(0, 5)
     bucket = EquationRect(r1, colors[color], easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, False)
-    rect = EquationRect(r2, BLUE, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, True)
+    rect = EquationRect(r2, Colors.BLUE, easy_equations[val][randint(0, len(easy_equations[val]) - 1)], val, True)
     return (bucket, rect)
 
 def new_hard_rectangle_pair(r1, r2):
     val = randint(0, 13)
-    color = randint(0, 4)
+    color = randint(0, 5)
     bucket = EquationRect(r1, colors[color], hard_equations[val][randint(0, len(hard_equations[val]) - 1)], val, False)
-    rect = EquationRect(r2, BLUE, hard_equations[val][randint(0, len(hard_equations[val]) - 1)], val, True)
+    rect = EquationRect(r2, Colors.BLUE, hard_equations[val][randint(0, len(hard_equations[val]) - 1)], val, True)
     return (bucket, rect)
 

@@ -125,6 +125,7 @@ def run():
                         for i in range(0, len(buckets)):
                             if buckets[i].rect.colliderect(hand.selected_piece().rect) and buckets[i].value == hand.selected_piece().value:
                                 playfield.remove(i)
+                                playfield.speed += 0.01
                                 hand.remove(hand.selected)
                                 scoreKeeper.increment(buckets[i].value) #increment score by 10
                                 foundMatch = True
@@ -150,8 +151,8 @@ def run():
 
 
         #draw graphics
-        screen.fill(BLACK)
-        pygame.draw.rect(screen, (100, 100, 100), HAND_AREA)
+        screen.fill((32, 34, 37))
+        pygame.draw.rect(screen, (64, 68, 75), HAND_AREA)
 
         drawScoreAndTime()
         if game_finished:
