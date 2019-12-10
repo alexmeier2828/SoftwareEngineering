@@ -101,3 +101,8 @@ footer p{
 .sec_para{
   padding-left: 30px;
 }
+
+.member_photo{
+  height: 300px;
+  width: auto;
+}
